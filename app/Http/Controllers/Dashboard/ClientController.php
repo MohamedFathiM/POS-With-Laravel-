@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Lang;
 class ClientController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $clients = Client::paginate();
+        $clients = Client::search($request)->paginate();
 
         return view('dashboard.clients.index', compact('clients'));
     }
@@ -29,60 +29,45 @@ class ClientController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'address' => 'required',
-            'phone.0' => 'required' ,
+            'phone.0' => 'required',
             'phone' => 'required|array|min:1'
         ]);
 
         $data['phone'] = array_filter($data['phone']);
         Client::create($data);
 
-        session()->flash('success',Lang::get('site.added_successfully'));
+        session()->flash('success', Lang::get('site.added_successfully'));
 
         return redirect()->route('dashboard.clients.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function edit(Client $client)
     {
-        //
+        return view('dashboard.clients.edit', compact('client'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function update(Request $request, Client $client)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'phone.0' => 'required',
+            'phone' => 'required|array|min:1'
+        ]);
+
+        $data['phone'] = array_filter($data['phone']);
+        $client->update($data);
+
+        session()->flash('success', Lang::get('site.updated_successfully'));
+
+        return redirect()->route('dashboard.clients.index');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function destroy(Client $client)
     {
-        //
-    }
+        $client->delete();
+        session()->flash('success', Lang::get('site.deleted_successfully'));
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->route('dashboard.clients.index');
     }
 }
