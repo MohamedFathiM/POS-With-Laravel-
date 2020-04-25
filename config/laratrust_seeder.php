@@ -7,6 +7,7 @@ return [
             'categories' => 'c,r,u,d',
             'users' => 'c,r,u,d',
             'clients' => 'c,r,u,d',
+            'orders' => 'c,r,u,d',
         ],
 
         'admin' => [],
