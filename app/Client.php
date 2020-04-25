@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Client extends Model
 {
@@ -21,4 +22,16 @@ class Client extends Model
     protected $casts = [
         'phone' => 'array',
     ];
+
+    #region relations
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+    #endregion relations
+
+    public function getNameAttribute($value)
+    {
+        return ucfirst($value);
+    }
 }
