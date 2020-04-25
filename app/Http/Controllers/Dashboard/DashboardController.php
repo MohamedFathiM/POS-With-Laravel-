@@ -2,13 +2,25 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Client;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Order;
+use App\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard.welcome');
+        $clients_count = Client::count();
+        $users_count  = User::whereRoleIs('admin')->count();
+        $products_count  = User::count();
+        $categories_count  = User::count();
+        $sales_data = Order::selectRaw('
+        Year(created_at) year ,
+        MONTH(created_at) month ,
+        SUM(total_price) sum')->groupBy('month','year')->get();
+
+
+        return view('dashboard.welcome', compact('clients_count', 'users_count', 'products_count','categories_count','sales_data'));
     }
 }
