@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Category;
 use App\Client;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\Product;
 use App\User;
 
 class DashboardController extends Controller
@@ -13,8 +15,8 @@ class DashboardController extends Controller
     {
         $clients_count = Client::count();
         $users_count  = User::whereRoleIs('admin')->count();
-        $products_count  = User::count();
-        $categories_count  = User::count();
+        $products_count  = Product::count();
+        $categories_count  = Category::count();
         $sales_data = Order::selectRaw('
         Year(created_at) year ,
         MONTH(created_at) month ,
